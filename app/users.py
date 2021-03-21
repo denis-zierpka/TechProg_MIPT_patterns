@@ -15,6 +15,7 @@ class Player:
         opp_player.warriors[opp_warrior].health -= self.warriors[your_warrior].power
         if opp_player.warriors[opp_warrior].health <= 0:
             opp_player.warriors[opp_warrior].alive = False
+            opp_player.warriors[opp_warrior].health = 0
 
     def player_status(self):
         ans = ''
