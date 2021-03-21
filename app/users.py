@@ -11,10 +11,16 @@ class Player:
                 return True
         return False
 
-    def status(self):
+    def perform_attack(self, opp_player, your_warrior, opp_warrior):
+        opp_player.warriors[opp_warrior].health -= self.warriors[your_warrior].power
+        if opp_player.warriors[opp_warrior].health <= 0:
+            opp_player.warriors[opp_warrior].alive = False
+
+    def player_status(self):
         ans = ''
         for i in self.warriors:
-            ans += str(i.type.value) + ' '
+            ans += i.warrior_status()
+            ans += '\n'
         return ans
 
 

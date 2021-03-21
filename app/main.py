@@ -2,7 +2,8 @@ from app import game
 
 
 def main():
-    game.play()
+    new_game = game.Game()
+    new_game.play()
 
 
 if __name__ == '__main__':
