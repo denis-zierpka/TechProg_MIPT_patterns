@@ -19,3 +19,9 @@ pip3 install -r requirements.txt
 2) python main.py      
 или       
 python3 main.py
+
+
+
+Участники проекта:
+- Цирпка Денис Б05-023, 1 курс
+- Мастинен Никита Б05-023, 1 курс
