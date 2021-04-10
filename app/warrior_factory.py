@@ -3,9 +3,12 @@ from app.warrior import Warrior, Archer, Infantryman, Horseman, Swordsman
 
 class Info:
     __list = {}
+    obj = None
 
-    def __init__(self):
-        pass
+    def __new__(cls):
+        if not cls.obj:
+            cls.obj = object.__new__(cls)
+        return cls.obj
 
     @staticmethod
     def getInstance():
