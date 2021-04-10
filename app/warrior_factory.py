@@ -4,15 +4,12 @@ from app.warrior import Warrior, Archer, Infantryman, Horseman, Swordsman
 class FactoryRegister:
     list = {}
 
+    def __init__(self, index):
+        self.index = index
 
-factory_register = FactoryRegister()
-
-
-def register(index):
-    def wrapper(func):
-        factory_register.list[index] = func
-        return func
-    return wrapper
+    def __call__(self, f):
+        self.list[self.index] = f
+        return f
 
 
 class WarriorFactory:
@@ -25,7 +22,7 @@ class WarriorFactory:
         pass
 
 
-@register(index=0)
+@FactoryRegister(index=0)
 class ArcherFactory(WarriorFactory):
     def __init__(self):
         pass
@@ -34,7 +31,7 @@ class ArcherFactory(WarriorFactory):
         return Archer()
 
 
-@register(index=1)
+@FactoryRegister(index=1)
 class InfantrymanFactory(WarriorFactory):
     def __init__(self):
         pass
@@ -43,7 +40,7 @@ class InfantrymanFactory(WarriorFactory):
         return Infantryman()
 
 
-@register(index=2)
+@FactoryRegister(index=2)
 class HorsemanFactory(WarriorFactory):
     def __init__(self):
         pass
@@ -52,7 +49,7 @@ class HorsemanFactory(WarriorFactory):
         return Horseman()
 
 
-@register(index=3)
+@FactoryRegister(index=3)
 class SwordsmanFactory(WarriorFactory):
     def __init__(self):
         pass
