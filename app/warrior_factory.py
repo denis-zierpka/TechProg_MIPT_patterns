@@ -1,14 +1,32 @@
 from app.warrior import Warrior, Archer, Infantryman, Horseman, Swordsman
 
 
-class FactoryRegister:
-    list = {}
+class Info:
+    __list = {}
+    obj = None
 
-    def __init__(self, index):
-        self.index = index
+    def __new__(cls):
+        if not cls.obj:
+            cls.obj = object.__new__(cls)
+        return cls.obj
+
+    @staticmethod
+    def getInstance():
+        return Info.__list
+
+    @staticmethod
+    def addToInstance(name, func):
+        if name in Info.__list:
+            return
+        Info.__list[name] = func
+
+
+class FactoryRegister:
+    def __init__(self, obj):
+        self.obj = obj
 
     def __call__(self, f):
-        self.list[self.index] = f
+        Info.addToInstance(name=self.obj.__name__, func=f)
         return f
 
 
@@ -22,7 +40,7 @@ class WarriorFactory:
         pass
 
 
-@FactoryRegister(index=0)
+@FactoryRegister(Archer)
 class ArcherFactory(WarriorFactory):
     def __init__(self):
         pass
@@ -31,7 +49,7 @@ class ArcherFactory(WarriorFactory):
         return Archer()
 
 
-@FactoryRegister(index=1)
+@FactoryRegister(Infantryman)
 class InfantrymanFactory(WarriorFactory):
     def __init__(self):
         pass
@@ -40,7 +58,7 @@ class InfantrymanFactory(WarriorFactory):
         return Infantryman()
 
 
-@FactoryRegister(index=2)
+@FactoryRegister(Horseman)
 class HorsemanFactory(WarriorFactory):
     def __init__(self):
         pass
@@ -49,7 +67,7 @@ class HorsemanFactory(WarriorFactory):
         return Horseman()
 
 
-@FactoryRegister(index=3)
+@FactoryRegister(Swordsman)
 class SwordsmanFactory(WarriorFactory):
     def __init__(self):
         pass
