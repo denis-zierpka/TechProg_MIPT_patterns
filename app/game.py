@@ -1,12 +1,14 @@
 from app.users import player1, player2
-from app.warrior import WarriorList
+from app.warrior_factory import factory_register
+from app.warrior_factory import WarriorFactory
+from app.warrior import Warrior
 
 
 def enter_number_mes():
     print('Enter number from 1 to 4, standing for next warriors')
     num = 1
-    for i in WarriorList.list:
-        print(str(num) + ' ' + str(i.__name__))
+    for cls in Warrior.__subclasses__():
+        print(str(num) + ' ' + str(cls.__name__))
         num += 1
     print('-----------------')
 
@@ -23,6 +25,7 @@ def print_start_info():
 class Game:
     def __init__(self):
         self.winner = 0
+        WarriorFactory()
 
     def choose_warriors(self, player):
         enter_number_mes()
@@ -37,7 +40,7 @@ class Game:
                 if a < 1 or a > 4:
                     print("Error!")
                     continue
-                player.add_warrior(WarriorList.list[a - 1]())
+                player.add_warrior(factory_register.list[a - 1].create_warrior(Warrior))
                 break
 
     def start_battle(self):
