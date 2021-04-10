@@ -38,12 +38,3 @@ class Swordsman(Warrior):
         self.health = 36
         self.power = 14
         self.alive = True
-
-
-class WarriorList:
-    list = [
-        Archer,
-        Infantryman,
-        Horseman,
-        Swordsman,
-    ]
