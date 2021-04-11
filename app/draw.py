@@ -25,20 +25,21 @@ class GameGraphicsAdapter:
         self.big_font = pygame.font.SysFont('Arial', 24, bold=True)
         self.screen.fill(self.BACKGROUND)
 
-    def choose_warriors(self, player, total_number_of_warriors):
+    def choose_warriors(self, player):
+        total_number_of_warriors = len(Warrior.__subclasses__())
         self.screen.fill(self.BACKGROUND)
         shift_top = 10
         shift_left = 10
         indent_between_objects = 10
         header = 'Choose warriors for {}'.format(player)
         max_width, max_height = self.screen.get_size()
-        word_width, word_height = self.font.size(header)
+        word_width, word_height = self.big_font.size(header)
 
         self.screen.blit(
-            self.font.render(header, True, pygame.Color('white')),
+            self.big_font.render(header, True, pygame.Color('white')),
             (max_width // 2 - word_width // 2, shift_top)
         )
-        shift_top += word_height
+        shift_top += word_height + indent_between_objects
         pygame.display.update()
 
         warrior_images = []
@@ -185,5 +186,5 @@ def number_of_chosen_warriors_image(screen, font, background, x, y, number, tota
 
 def test():
     it = GameGraphicsAdapter()
-    it.choose_warriors("NIKITA", 4)
+    it.choose_warriors("NIKITA")
     time.sleep(10)
