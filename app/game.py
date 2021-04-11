@@ -2,6 +2,7 @@ from app.users import player1, player2
 from app.warrior_factory import Info
 from app.warrior_factory import WarriorFactory
 from app.warrior import Warrior
+from app.draw import GameGraphicsAdapter
 
 
 def enter_number_mes():
@@ -46,14 +47,17 @@ class Game:
                 break
 
     def start_battle(self):
+        it = GameGraphicsAdapter()
+
         print('Player1:\nChoose 3 warriors you would like to see in your team')
-        # get dict by calling function from draw.py
-        self.choose_warriors(player1)
+        a = it.choose_warriors("Player1")
+        for i, j in a.items():
+            for _ in range(j):
+                player1.add_warrior(Info.getInstance()[i].create_warrior(Warrior))
+
         print('Player2:\nChoose 3 warriors you would like to see in your team')
-        self.choose_warriors(player2)
-
+        a = it.choose_warriors("Player2")
+        for i, j in a.items():
+            for _ in range(j):
+                player2.add_warrior(Info.getInstance()[i].create_warrior(Warrior))
         print_start_info()
-
-    def play(self):
-        # implement graphics
-        self.start_battle()

@@ -187,4 +187,3 @@ def number_of_chosen_warriors_image(screen, font, background, x, y, number, tota
 def test():
     it = GameGraphicsAdapter()
     it.choose_warriors("NIKITA")
-    time.sleep(10)
