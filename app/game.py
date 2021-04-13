@@ -1,8 +1,10 @@
 from app.users import player1, player2
-from app.warrior_factory import Info
 from app.warrior_factory import WarriorFactory
-from app.warrior import Warrior
+from app.warrior.Warrior import Warrior
 from app.draw import GameGraphicsAdapter
+from app.warrior_factory.WarriorFactory import WarriorFactory
+from app.FactoryRegister import Info
+from app.warrior_factory import ArcherFactory, HorsemanFactory, InfantrymanFactory, SwordsmanFactory
 
 
 def enter_number_mes():
@@ -40,10 +42,10 @@ class Game:
                     print("Error!")
                     continue
 
-                if a not in Info.getInstance():
+                if a not in Info.getInstance(cls=Info).dict_of_factories:
                     print("Error!")
                     continue
-                player.add_warrior(Info.getInstance()[a].create_warrior(Warrior))
+                player.add_warrior(Info.getInstance(cls=Info).dict_of_factories[a].create_warrior(Warrior))
                 break
 
     def start_battle(self):
@@ -53,11 +55,11 @@ class Game:
         a = it.choose_warriors("Player1")
         for i, j in a.items():
             for _ in range(j):
-                player1.add_warrior(Info.getInstance()[i].create_warrior(Warrior))
+                player1.add_warrior(Info.getInstance(cls=Info).dict_of_factories[i].create_warrior(Warrior))
 
         print('Player2:\nChoose 3 warriors you would like to see in your team')
         a = it.choose_warriors("Player2")
         for i, j in a.items():
             for _ in range(j):
-                player2.add_warrior(Info.getInstance()[i].create_warrior(Warrior))
+                player2.add_warrior(Info.getInstance(cls=Info).dict_of_factories[i].create_warrior(Warrior))
         print_start_info()
