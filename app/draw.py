@@ -1,6 +1,6 @@
 import sys
 import time
-from app.warrior import Warrior
+from app.warrior.Warrior import Warrior
 
 import pygame
 
