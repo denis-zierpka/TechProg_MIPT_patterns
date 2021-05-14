@@ -5,7 +5,6 @@ from app.FactoryRegister import Info
 from app.graphics.BottomImage import ChooseBottomImage
 from app.graphics.NumberOfWarriorsImage import number_of_chosen_warriors_image
 from app.graphics.WarriorImage import WarriorImage
-from app.warrior.Warrior import Warrior
 
 import pygame
 
@@ -29,6 +28,40 @@ class GameGraphics:
         self.font = pygame.font.SysFont('Arial', 12, bold=True)
         self.big_font = pygame.font.SysFont('Arial', 24, bold=True)
         self.screen.fill(self.BACKGROUND)
+
+    def start_choosing(self, result, total_number_of_warriors, add_bottoms, pop_bottoms, shift_left, shift_top):
+        number_of_chosen = 0
+        while True:
+            time.sleep(0.05)
+            if number_of_chosen == total_number_of_warriors:
+                print(result)
+                self.screen.fill(color=pygame.Color('red'))
+                pygame.display.update()
+                return result
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit(0)
+                if event.type == pygame.MOUSEBUTTONUP:
+                    click = pygame.mouse.get_pos()
+
+                    for cls, i, j in zip(Info.get_factories(Info), add_bottoms, pop_bottoms):
+                        if j.is_clicked(click[0], click[1]) and result[str(cls)] > 0:
+                            result[str(cls)] -= 1
+                            number_of_chosen -= 1
+                        if i.is_clicked(click[0], click[1]):
+                            result[str(cls)] += 1
+                            number_of_chosen += 1
+
+                    number_of_chosen_warriors_image(
+                        self.screen,
+                        self.big_font,
+                        self.BACKGROUND,
+                        shift_left,
+                        shift_top,
+                        number_of_chosen,
+                        total_number_of_warriors
+                    )
 
     def choose_warriors(self, draw_object):
         total_number_of_warriors = len(Info.get_factories(Info))
@@ -86,35 +119,5 @@ class GameGraphics:
             0,
             total_number_of_warriors
         )
-        number_of_chosen = 0
-        while True:
-            time.sleep(0.05)
-            if number_of_chosen == total_number_of_warriors:
-                print(result)
-                self.screen.fill(color=pygame.Color('red'))
-                pygame.display.update()
-                return result
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit(0)
-                if event.type == pygame.MOUSEBUTTONUP:
-                    click = pygame.mouse.get_pos()
 
-                    for cls, i, j in zip(Info.get_factories(Info), add_bottoms, pop_bottoms):
-                        if j.is_clicked(click[0], click[1]) and result[str(cls)] > 0:
-                            result[str(cls)] -= 1
-                            number_of_chosen -= 1
-                        if i.is_clicked(click[0], click[1]):
-                            result[str(cls)] += 1
-                            number_of_chosen += 1
-
-                    number_of_chosen_warriors_image(
-                        self.screen,
-                        self.big_font,
-                        self.BACKGROUND,
-                        shift_left,
-                        shift_top,
-                        number_of_chosen,
-                        total_number_of_warriors
-                    )
+        return self.start_choosing(result, total_number_of_warriors, add_bottoms, pop_bottoms, shift_left, shift_top)
