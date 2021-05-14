@@ -15,11 +15,15 @@ class Info:
             return
         Info.getInstance(cls).dict_of_factories[name] = func
 
+    @staticmethod
+    def get_factories(cls):
+        return cls.getInstance(Info).dict_of_factories
+
 
 class FactoryRegister:
     def __init__(self, obj):
         self.obj = obj
 
     def __call__(self, f):
-        Info.addToInstance(cls=Info, name=self.obj.__name__, func=f)
+        Info.addToInstance(Info, name=self.obj.__name__, func=f)
         return f
