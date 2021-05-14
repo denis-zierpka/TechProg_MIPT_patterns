@@ -4,3 +4,9 @@ class Player:
 
     def add_warrior(self, obj):
         self.warriors.append(obj)
+
+    def has_alive_warriors(self):
+        for i in self.warriors:
+            if i.alive:
+                return True
+        return False
