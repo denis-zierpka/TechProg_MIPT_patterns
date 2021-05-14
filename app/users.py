@@ -10,3 +10,10 @@ class Player:
             if i.alive:
                 return True
         return False
+
+    def player_status(self):
+        ans = ''
+        for i in self.warriors:
+            ans += i.warrior_status(str(type(i).__name__))
+            ans += '\n'
+        return ans

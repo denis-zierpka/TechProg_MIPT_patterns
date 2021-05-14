@@ -34,13 +34,23 @@ class Game:
 
         if not attacker.warriors[ind_attacker].attack(victim.warriors[ind_victim]):
             return False
+        return True
 
     def check_for_win(self):
         if not self.player1.has_alive_warriors():
             print("Player2 won!")
         if not self.player2.has_alive_warriors():
             print("Player1 won!")
+        a = int(input())
         sys.exit(0)
+
+    def print_start_info(self):
+        print('-----------------')
+        print('Player1 status:')
+        print(self.player1.player_status())
+        print('-----------------')
+        print('Player2 status:')
+        print(self.player2.player_status())
 
     def start_battle(self):
         self.add_for_player(self.player1, "Player1")
@@ -49,15 +59,18 @@ class Game:
         if len(self.player2.warriors) == 4:
             while True:
                 result = self.attack_player(self.player1, self.player2)
+                print(666, result)
                 while not result:
                     result = self.attack_player(self.player1, self.player2)
 
+                self.print_start_info()
                 self.check_for_win()
 
                 result = self.attack_player(self.player2, self.player1)
                 while not result:
                     result = self.attack_player(self.player2, self.player1)
 
+                self.print_start_info()
                 self.check_for_win()
 
 

@@ -5,6 +5,7 @@ class Warrior:
         self.alive = True
 
     def attack(self, other_warrior):
+        print(other_warrior.alive)
         if not other_warrior.alive:
             return False
 
