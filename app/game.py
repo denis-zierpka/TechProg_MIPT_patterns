@@ -24,13 +24,8 @@ class Game:
                 player.add_warrior(Info.get_factories(Info)[key].create_warrior(Warrior))
 
     def attack_player(self, attacker, victim):
-        ind_attacker = 0   # from facade
-        ind_victim = 0    # from facade
-
-        ind_attacker = int(input())   # TODO
-        print(ind_attacker)
+        ind_attacker = int(input())
         ind_victim = int(input())
-        print(ind_victim)
 
         if not attacker.warriors[ind_attacker].attack(victim.warriors[ind_victim]):
             return False
@@ -39,10 +34,12 @@ class Game:
     def check_for_win(self):
         if not self.player1.has_alive_warriors():
             print("Player2 won!")
+            a = int(input())
+            sys.exit(0)
         if not self.player2.has_alive_warriors():
             print("Player1 won!")
-        a = int(input())
-        sys.exit(0)
+            a = int(input())
+            sys.exit(0)
 
     def print_start_info(self):
         print('-----------------')
@@ -58,6 +55,7 @@ class Game:
 
         if len(self.player2.warriors) == 4:
             while True:
+                print("Player1 choose")
                 result = self.attack_player(self.player1, self.player2)
                 print(666, result)
                 while not result:
@@ -66,6 +64,7 @@ class Game:
                 self.print_start_info()
                 self.check_for_win()
 
+                print("Player2 choose")
                 result = self.attack_player(self.player2, self.player1)
                 while not result:
                     result = self.attack_player(self.player2, self.player1)

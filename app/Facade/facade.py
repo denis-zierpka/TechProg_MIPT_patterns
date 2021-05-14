@@ -14,6 +14,3 @@ class Facade:
 
     def choose_warriors(self, player):
         return self.object.choose_warriors(player)
-
-    def perform_attack(self):
-        pass
