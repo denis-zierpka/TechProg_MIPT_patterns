@@ -11,7 +11,3 @@ class Player:
             ans += i.warrior_status(str(type(i).__name__))
             ans += '\n'
         return ans
-
-
-player1 = Player()
-player2 = Player()

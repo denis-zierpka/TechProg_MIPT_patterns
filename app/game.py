@@ -1,7 +1,7 @@
-from app.users import player1, player2
+from app.users import Player
 from app.warrior_factory import WarriorFactory
 from app.warrior.Warrior import Warrior
-from app.draw import GameGraphicsAdapter
+from app.Facade.facade import Facade
 from app.warrior_factory.WarriorFactory import WarriorFactory
 from app.FactoryRegister import Info
 from app.warrior_factory import ArcherFactory, HorsemanFactory, InfantrymanFactory, SwordsmanFactory
@@ -10,27 +10,21 @@ from app.warrior_factory import ArcherFactory, HorsemanFactory, InfantrymanFacto
 def enter_number_mes():
     print('Enter number from 1 to 4, standing for next warriors')
     num = 1
-    # qwe = [str(cls.__name__) for cls in Warrior.__subclasses__()]
-    # a = {'Archer': 2, '...': 0, '...': 1, '...': 0}
     for cls in Warrior.__subclasses__():
         print(str(num) + ' ' + str(cls.__name__))
         num += 1
     print('-----------------')
 
 
-def print_start_info():
-    print('-----------------')
-    print('Player1 status:')
-    print(player1.player_status())
-    print('-----------------')
-    print('Player2 status:')
-    print(player2.player_status())
+
 
 
 class Game:
     def __init__(self):
-        self.winner = 0
+        self.facade = Facade()
         WarriorFactory()
+        self.player1 = Player()
+        self.player2 = Player()
 
     def choose_warriors(self, player):
         enter_number_mes()
@@ -42,24 +36,29 @@ class Game:
                     print("Error!")
                     continue
 
-                if a not in Info.getInstance(cls=Info).dict_of_factories:
+                if a not in Info.get_factories(Info):
                     print("Error!")
                     continue
-                player.add_warrior(Info.getInstance(cls=Info).dict_of_factories[a].create_warrior(Warrior))
+                player.add_warrior(Info.get_factories(Info)[a].create_warrior(Warrior))
                 break
 
+    def print_start_info(self):
+        print('-----------------')
+        print('Player1 status:')
+        print(self.player1.player_status())
+        print('-----------------')
+        print('Player2 status:')
+        print(self.player2.player_status())
+
+    def add_for_player(self, player, name):
+        print('{}:\nChoose 3 warriors you would like to see in your team'.format(name))
+        list_of_items = self.facade.choose_warriors(name)
+        for key, val in list_of_items.items():
+            for _ in range(val):
+                player.add_warrior(Info.get_factories(Info)[key].create_warrior(Warrior))
+
     def start_battle(self):
-        it = GameGraphicsAdapter()
+        self.add_for_player(self.player1, "Player1")
+        self.add_for_player(self.player2, "Player2")
 
-        print('Player1:\nChoose 3 warriors you would like to see in your team')
-        a = it.choose_warriors("Player1")
-        for i, j in a.items():
-            for _ in range(j):
-                player1.add_warrior(Info.getInstance(cls=Info).dict_of_factories[i].create_warrior(Warrior))
-
-        print('Player2:\nChoose 3 warriors you would like to see in your team')
-        a = it.choose_warriors("Player2")
-        for i, j in a.items():
-            for _ in range(j):
-                player2.add_warrior(Info.getInstance(cls=Info).dict_of_factories[i].create_warrior(Warrior))
-        print_start_info()
+        self.print_start_info()

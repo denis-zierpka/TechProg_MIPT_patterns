@@ -1,11 +1,16 @@
 import sys
 import time
+
+from app.FactoryRegister import Info
+from app.graphics.BottomImage import ChooseBottomImage
+from app.graphics.NumberOfWarriorsImage import number_of_chosen_warriors_image
+from app.graphics.WarriorImage import WarriorImage
 from app.warrior.Warrior import Warrior
 
 import pygame
 
 
-class GameGraphicsAdapter:
+class GameGraphics:
     __this = None
 
     def __new__(cls, *args, **kwargs):
@@ -25,13 +30,13 @@ class GameGraphicsAdapter:
         self.big_font = pygame.font.SysFont('Arial', 24, bold=True)
         self.screen.fill(self.BACKGROUND)
 
-    def choose_warriors(self, player):
-        total_number_of_warriors = len(Warrior.__subclasses__())
+    def choose_warriors(self, draw_object):
+        total_number_of_warriors = len(Info.get_factories(Info))
         self.screen.fill(self.BACKGROUND)
         shift_top = 10
         shift_left = 10
         indent_between_objects = 10
-        header = 'Choose warriors for {}'.format(player)
+        header = 'Choose warriors for {}'.format(draw_object)
         max_width, max_height = self.screen.get_size()
         word_width, word_height = self.big_font.size(header)
 
@@ -66,11 +71,11 @@ class GameGraphicsAdapter:
             shift_top += indent_between_objects
 
         result = {}
-        for i, a, p, cls in zip(warrior_images, add_bottoms, pop_bottoms, Warrior.__subclasses__()):
-            i.draw(self.screen, self.font, str(cls.__name__))
+        for i, a, p, cls in zip(warrior_images, add_bottoms, pop_bottoms, Info.get_factories(Info)):
+            i.draw(self.screen, self.font, str(cls))
             a.draw(self.screen, self.font, '+')
             p.draw(self.screen, self.font, '-')
-            result[str(cls.__name__)] = 0
+            result[str(cls)] = 0
 
         number_of_chosen_warriors_image(
             self.screen,
@@ -95,12 +100,13 @@ class GameGraphicsAdapter:
                     sys.exit(0)
                 if event.type == pygame.MOUSEBUTTONUP:
                     click = pygame.mouse.get_pos()
-                    for cls, i, j in zip(Warrior.__subclasses__(), add_bottoms, pop_bottoms):
-                        if j.is_clicked(click[0], click[1]) and result[str(cls.__name__)] > 0:
-                            result[str(cls.__name__)] -= 1
+
+                    for cls, i, j in zip(Info.get_factories(Info), add_bottoms, pop_bottoms):
+                        if j.is_clicked(click[0], click[1]) and result[str(cls)] > 0:
+                            result[str(cls)] -= 1
                             number_of_chosen -= 1
                         if i.is_clicked(click[0], click[1]):
-                            result[str(cls.__name__)] += 1
+                            result[str(cls)] += 1
                             number_of_chosen += 1
 
                     number_of_chosen_warriors_image(
@@ -112,78 +118,3 @@ class GameGraphicsAdapter:
                         number_of_chosen,
                         total_number_of_warriors
                     )
-
-
-class WarriorImage:
-    def __init__(self, background, x, y):
-        self.radius = 40
-        self.height = 2 * self.radius
-        self.length = 2 * self.radius
-        self.center = (x + self.radius, y + self.radius)
-        self.x = x
-        self.y = y
-        self.background = background
-
-    def draw(self, screen, font, name, color=(255, 255, 255)):
-        pygame.draw.circle(
-            screen,
-            color,
-            (self.x + self.radius, self.y + self.radius),
-            self.radius
-        )
-        word_width, word_height = font.size(name)
-        screen.blit(
-            font.render(name, True, (255, 0, 0)),
-            (self.x + self.radius - word_width // 2, self.y + self.radius - word_height // 2)
-        )
-        pygame.display.update()
-
-    def erase(self, screen):
-        pygame.draw.circle(
-            screen,
-            self.background,
-            (self.x + self.radius, self.y + self.radius),
-            self.radius
-        )
-        pygame.display.update()
-
-
-class ChooseBottomImage:
-    def __init__(self, x, y):
-        self.radius = 20
-        self.height = 2 * self.radius
-        self.length = 2 * self.radius
-        self.center = (x + self.radius, y)
-        self.x = x
-        self.y = y
-
-    def draw(self, screen, font, text, color=(255, 255, 255)):
-        word_width, word_height = font.size(text)
-        pygame.draw.circle(
-            screen,
-            color,
-            (self.x + self.radius, self.y),
-            self.radius
-        )
-
-        screen.blit(
-            font.render(text, True, (0, 0, 0)),
-            (self.x + self.radius - word_width // 2, self.y - word_height // 2)
-        )
-        pygame.display.update()
-
-    def is_clicked(self, x, y):
-        return (x - self.center[0]) ** 2 + (y - self.center[1]) ** 2 <= self.radius ** 2
-
-
-def number_of_chosen_warriors_image(screen, font, background, x, y, number, total):
-    suffix = '/{}'.format(total)
-    screen.fill(background, (x, y, x + font.size('0')[0] * 2, y + font.size('0')[1] * 2))
-    screen.blit(font.render(str(number - 1) + suffix, True, background), (x, y))
-    screen.blit(font.render(str(number) + suffix, True, (255, 0, 0)), (x, y))
-    pygame.display.update()
-
-
-def test():
-    it = GameGraphicsAdapter()
-    it.choose_warriors("NIKITA")
